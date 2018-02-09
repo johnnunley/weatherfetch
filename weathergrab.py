@@ -46,6 +46,11 @@ else:
 page = requests.get(url)
 tree = html.fromstring(page.content)
 
+overallQuality = tree.xpath('//table[@class="TblInvisible"]')
+overallQuality = overallQuality[0].xpath('//table[@class="TblInvisible"]')
+overallQuality = strippedList(list(itertext(overallQuality[0])))
+overallQuality = ["Overall",overallQuality[0],overallQuality[1]];
+
 quality = []
 mainAirQuality = tree.xpath('//td[@class="AQDataPollDetails"]')
 for labelElem in mainAirQuality:
@@ -57,6 +62,7 @@ cityNameElem = tree.xpath('//td[@class="ActiveCity"]/text()')
 cityName = cityNameElem[0].strip()
 
 print(now.strftime("Air Quality in " + cityName + " on %m-%d-%Y at %H:%M"))
+print(overallQuality)
 print(quality[0])
 print(quality[2])
 print(quality[4])
