@@ -61,7 +61,7 @@ for labelElem in mainAirQuality:
 cityNameElem = tree.xpath('//td[@class="ActiveCity"]/text()')
 cityName = cityNameElem[0].strip()
 
-print(now.strftime("Air Quality in " + cityName + " on %m-%d-%Y at %H:%M"))
+print(now.strftime("Air Quality in " + cityName + " on %m-%d-%Y at %I:%M %p"))
 print(overallQuality)
 print(quality[0])
 print(quality[2])
