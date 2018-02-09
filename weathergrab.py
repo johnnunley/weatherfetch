@@ -19,10 +19,11 @@
 from lxml import html
 import requests
 import datetime
+import sys
 
 now = datetime.datetime.now()
 
-def itertext(root, handlers=dict(ul=lambda el: (list(el.itertext()),                                                el.tail))):
+def itertext(root, handlers=dict(ul=lambda el: (list(el.itertext()), el.tail))):
     if root.text:
         yield root.text
     for el in root:
@@ -36,7 +37,12 @@ def strippedList(mylist):
         stripped.remove('')
     return stripped
 
-url = "https://airnow.gov/index.cfm?action=airnow.local_city&mapcenter=0&cityid=17"
+isRunningAltArea = 0
+if len(sys.argv) >= 2:
+  url = sys.argv[1]
+  isRunningAltArea = 1
+else:
+  url = "https://airnow.gov/index.cfm?action=airnow.local_city&mapcenter=0&cityid=17"
 page = requests.get(url)
 tree = html.fromstring(page.content)
 
@@ -47,7 +53,10 @@ for labelElem in mainAirQuality:
     results = strippedList(list(itertext(parentRow)))
     quality.append(results)
 
-print(now.strftime("Air Quality in Atlanta on %m-%d-%Y at %H:%M"))
+cityNameElem = tree.xpath('//td[@class="ActiveCity"]/text()')
+cityName = cityNameElem[0].strip()
+
+print(now.strftime("Air Quality in " + cityName + " on %m-%d-%Y at %H:%M"))
 print(quality[0])
 print(quality[2])
 print(quality[4])
